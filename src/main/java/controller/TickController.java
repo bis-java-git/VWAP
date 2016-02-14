@@ -6,7 +6,7 @@ public interface TickController {
 
     void stop();
 
-    Boolean getStatus();
+    Boolean isRunning();
 
-    Integer getAtomicCounter();
+    Integer getTotalMarketDepthPrices();
 }

@@ -27,7 +27,7 @@ public class TickControllerImpl implements TickController {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-    public Integer getAtomicCounter() {
+    public Integer getTotalMarketDepthPrices() {
         return atomicCounter.get();
     }
 
@@ -46,7 +46,7 @@ public class TickControllerImpl implements TickController {
     }
 
     @Override
-    public Boolean getStatus() {
+    public Boolean isRunning() {
         return keepRunning.get();
     }
 
@@ -57,8 +57,8 @@ public class TickControllerImpl implements TickController {
                     final TickEvent event = queue.poll();
                     vwapService.addTick(event);
                     atomicCounter.getAndIncrement();
-                    logger.debug(event.toString());
-                    logger.debug(vwapService.getVWAPPrice(event.getInstrument()).toString());
+                    logger.info(event.toString());
+                    logger.info(vwapService.getVWAPPrice(event.getInstrument()).toString());
                 }
             }
             return null;

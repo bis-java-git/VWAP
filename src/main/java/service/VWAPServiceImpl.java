@@ -32,32 +32,38 @@ public class VWAPServiceImpl implements VWAPService {
     //price expiry period needs to be set, which will be enhancement later.
     private final ConcurrentMap<String, List<TickEvent>> marketDepthMap = new ConcurrentHashMap<>();
 
-    private List<TickEvent> getALlEvents(final String instrument, final EventType eventType) {
+    private List<TickEvent> getALlEvents(final String instrument,
+                                         final EventType eventType) {
         return marketDepthMap.get(instrument).parallelStream().filter(instrumentPredicate(instrument, eventType)).collect(toList());
     }
 
-    private Predicate<TickEvent> instrumentPredicate(final String instrument, final EventType eventType) {
-        return i -> i.getEventType() == eventType && Objects.equals(i.getInstrument(), instrument);
+    private Predicate<TickEvent> instrumentPredicate(final String instrument,
+                                                     final EventType eventType) {
+        return tickEvent -> tickEvent.getEventType() == eventType && Objects.equals(tickEvent
+                .getInstrument(), instrument);
     }
 
     //Following assumptions made
     //Both prices are calculated at the same time buy and sell
     //Initial price for buy/or sale is zero, needs to be fixed later.
-    private BigDecimal getPrice(final String instrument, final EventType event) {
-        BigDecimal totalVolumePrice = getALlEvents(instrument, event).
-                parallelStream().map((i) -> new BigDecimal(String.valueOf(i.getVolume())).multiply(i.getPrice())).
+    private BigDecimal getPrice(final String instrument,
+                                final EventType event) {
+        final BigDecimal totalVolumePrice = getALlEvents(instrument, event).
+                parallelStream().map((tickEvent) ->
+                new BigDecimal(String.valueOf(tickEvent.getVolume())).multiply(tickEvent.getPrice())).
                 reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Long totalVolume = getTotalVolume(instrument, event);
+        final Long totalVolume = getTotalVolume(instrument, event);
 
         if (totalVolume == 0) {
             return BigDecimal.ZERO;
         }
-        return totalVolumePrice.divide(new BigDecimal(getTotalVolume(instrument, event)), MathContext.DECIMAL128).
+        return totalVolumePrice.divide(new BigDecimal(totalVolume), MathContext.DECIMAL128).
                 setScale(DECIMAL_PLACES, BigDecimal.ROUND_HALF_EVEN);
     }
 
-    private Long getTotalVolume(final String instrument, final EventType event) {
+    private Long getTotalVolume(final String instrument,
+                                final EventType event) {
         return getALlEvents(instrument, event).
                 parallelStream().mapToLong(TickEvent::getVolume).sum();
     }
@@ -67,13 +73,13 @@ public class VWAPServiceImpl implements VWAPService {
         vwapReadLock.lock();
         final BigDecimal buyVolumePrice = getPrice(instrument, EventType.BUY);
         final BigDecimal sellVolumePrice = getPrice(instrument, EventType.SELL);
-        VWAPPrice price = new VWAPPrice(buyVolumePrice, sellVolumePrice, instrument);
+        final VWAPPrice price = new VWAPPrice(buyVolumePrice, sellVolumePrice, instrument);
         vwapReadLock.unlock();
         return price;
     }
 
     @Override
-    public void addTick(TickEvent event) {
+    public void addTick(final TickEvent event) {
         vwapWriteLock.lock();
         List<TickEvent> list = marketDepthMap.get(event.getInstrument());
         if (list == null) {

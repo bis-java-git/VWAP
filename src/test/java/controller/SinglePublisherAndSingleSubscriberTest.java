@@ -61,7 +61,8 @@ public class SinglePublisherAndSingleSubscriberTest {
 
         private final List<TickEvent> eventList;
 
-        public CallableThread(final TickEventPublisher tickEventPublisher, final List<TickEvent> eventList) {
+        public CallableThread(final TickEventPublisher tickEventPublisher,
+                              final List<TickEvent> eventList) {
             this.tickEventPublisher = tickEventPublisher;
             this.eventList = eventList;
         }
@@ -78,7 +79,7 @@ public class SinglePublisherAndSingleSubscriberTest {
 
         //Given
         final Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
-        TickController tickController = new TickControllerImpl(queue);
+        final TickController tickController = new TickControllerImpl(queue);
         tickController.start();
 
         final TickEventPublisher markits = new TickEventPublisher("MARKITS");
@@ -103,8 +104,8 @@ public class SinglePublisherAndSingleSubscriberTest {
         tickController.stop();
 
         //Then
-        assertEquals(new Integer(markitsEventArray.length + bloombergEventArray.length + reutersEventArray.length), tickController.getAtomicCounter());
-        assertFalse(tickController.getStatus());
+        assertEquals(new Integer(markitsEventArray.length + bloombergEventArray.length + reutersEventArray.length), tickController.getTotalMarketDepthPrices());
+        assertFalse(tickController.isRunning());
         cachedPool.shutdown();
     }
 }

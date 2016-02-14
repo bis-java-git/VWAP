@@ -71,7 +71,8 @@ public class MultiplePublishersAndMultipleSubscriberTest {
 
         private final List<TickEvent> eventList;
 
-        public CallableThread(final TickEventPublisher tickEventPublisher, final List<TickEvent> eventList) {
+        public CallableThread(final TickEventPublisher tickEventPublisher,
+                              final List<TickEvent> eventList) {
             this.tickEventPublisher = tickEventPublisher;
             this.eventList = eventList;
         }
@@ -89,23 +90,23 @@ public class MultiplePublishersAndMultipleSubscriberTest {
         //given
         Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
         // given with multiple publishers and multiple subscribers
-        TickController tickController = new TickControllerImpl(queue);
+        final TickController tickController = new TickControllerImpl(queue);
         tickController.start();
 
         //Markits Publisher
-        TickEventPublisher markits = new TickEventPublisher("MARKITS");
+        final TickEventPublisher markits = new TickEventPublisher("MARKITS");
         new TickSubscriber(markits.getEventBus(), queue);
 
         //Bloomeberg Publisher
-        TickEventPublisher bloomsbergPublisher = new TickEventPublisher("BLOOMBERG");
+        final TickEventPublisher bloomsbergPublisher = new TickEventPublisher("BLOOMBERG");
         new TickSubscriber(bloomsbergPublisher.getEventBus(), queue);
 
         //Reuters Publisher
-        TickEventPublisher reutersPublisher = new TickEventPublisher("REUTERS");
+        final TickEventPublisher reutersPublisher = new TickEventPublisher("REUTERS");
         new TickSubscriber(reutersPublisher.getEventBus(), queue);
 
         // when
-        List<Callable<Void>> tasks = new ArrayList<>();
+        final List<Callable<Void>> tasks = new ArrayList<>();
 
         tasks.add(new CallableThread(markits, Arrays.asList(ldnEventArray)));
         tasks.add(new CallableThread(bloomsbergPublisher, Arrays.asList(nyEventArray)));
@@ -120,8 +121,8 @@ public class MultiplePublishersAndMultipleSubscriberTest {
         tickController.stop();
 
         //Then
-        assertEquals(new Integer(ldnEventArray.length + nyEventArray.length + hkEventArray.length), tickController.getAtomicCounter());
-        assertFalse(tickController.getStatus());
+        assertEquals(new Integer(ldnEventArray.length + nyEventArray.length + hkEventArray.length), tickController.getTotalMarketDepthPrices());
+        assertFalse(tickController.isRunning());
         cachedPool.shutdown();
     }
 }
