@@ -15,7 +15,7 @@ public class VWAPServiceTest {
 
     private static String RIC = "bbva.mc";
 
-    private static Integer VOLUME  = 100_0;
+    private static Long VOLUME  = 100_0L;
 
     private VWAPService vwapService = new VWAPServiceImpl();
 

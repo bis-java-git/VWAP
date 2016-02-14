@@ -1,6 +1,7 @@
 package eventbus.events;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 public final class TickEvent {
@@ -11,7 +12,7 @@ public final class TickEvent {
 
     private final EventType eventType;
 
-    private final Integer volume;
+    private final Long volume;
 
     private final String instrument;
 
@@ -23,7 +24,7 @@ public final class TickEvent {
         return eventType;
     }
 
-    public Integer getVolume() {
+    public Long getVolume() {
         return volume;
     }
 
@@ -34,7 +35,7 @@ public final class TickEvent {
     public TickEvent(
             final String instrument,
             final BigDecimal price,
-            final Integer volume,
+            final Long volume,
             final EventType eventType,
             final Long timeStamp) {
         this.price = price;

@@ -45,15 +45,15 @@ public class VWAPServiceImpl implements VWAPService {
     //Initial price for buy/or sale is zero, needs to be fixed later.
     private BigDecimal getPrice(final String instrument, final EventType event) {
         BigDecimal totalVolumePrice = getALlEvents(instrument, event).
-                parallelStream().map((i) -> new BigDecimal((i.getVolume() * i.getPrice().doubleValue()))).
+                parallelStream().map((i) -> new BigDecimal(String.valueOf(i.getVolume())).multiply(i.getPrice())).
                 reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Long totalVolume = getTotalVolume(instrument, event);
 
-        if (totalVolume==0) {
+        if (totalVolume == 0) {
             return BigDecimal.ZERO;
         }
-        return totalVolumePrice.divide(BigDecimal.valueOf(getTotalVolume(instrument, event)), MathContext.DECIMAL128).
+        return totalVolumePrice.divide(new BigDecimal(getTotalVolume(instrument, event)), MathContext.DECIMAL128).
                 setScale(DECIMAL_PLACES, BigDecimal.ROUND_HALF_EVEN);
     }
 

@@ -1,7 +1,5 @@
 package controller;
 
-import controller.TickController;
-import controller.TickControllerImpl;
 import eventbus.TickEventPublisher;
 import eventbus.events.EventType;
 import eventbus.events.TickEvent;
@@ -33,28 +31,28 @@ public class SinglePublisherAndSingleSubscriberTest {
     private final ExecutorService cachedPool = Executors.newCachedThreadPool();
 
     private final TickEvent[] markitsEventArray = {
-            new TickEvent(RIC_BBVA, new BigDecimal("11.1"), 100_00_00, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("10.2"), 50_00_00, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("9.3"), 100_00_00, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("8.1"), 100_00_00, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("7.2"), 50_00_00, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("15.3"), 100_00_00, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("20.1"), 0, EventType.NONE, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("5.2"), 0, EventType.NONE, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("30.3"), 0, EventType.NONE, System.nanoTime())
+            new TickEvent(RIC_BBVA, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("10.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("9.3"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("8.1"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("7.2"), 50_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("15.3"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("20.1"), 0L, EventType.NONE, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("5.2"), 0L, EventType.NONE, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("30.3"), 0L, EventType.NONE, System.nanoTime())
     };
 
 
     private final TickEvent[] bloombergEventArray = {
-            new TickEvent(RIC_HSBC, new BigDecimal("10.1"), 100_00_00, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_HSBC, new BigDecimal("15.2"), 50_00_00, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_HSBC, new BigDecimal("20.3"), 100_00_00, EventType.BUY, System.nanoTime())
+            new TickEvent(RIC_HSBC, new BigDecimal("10.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_HSBC, new BigDecimal("15.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_HSBC, new BigDecimal("20.3"), 100_00_00L, EventType.BUY, System.nanoTime())
     };
 
     private final TickEvent[] reutersEventArray = {
-            new TickEvent(RIC_BT, new BigDecimal("20"), 100_0, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_BT, new BigDecimal("30"), 100_0, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_BT, new BigDecimal("50"), 100_0, EventType.BUY, System.nanoTime())
+            new TickEvent(RIC_BT, new BigDecimal("20"), 100_0L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_BT, new BigDecimal("30"), 100_0L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_BT, new BigDecimal("50"), 100_0L, EventType.BUY, System.nanoTime())
     };
 
     private class CallableThread implements Callable<Void> {
@@ -105,7 +103,7 @@ public class SinglePublisherAndSingleSubscriberTest {
         tickController.stop();
 
         //Then
-        assertEquals(new Integer(markitsEventArray.length+bloombergEventArray.length+reutersEventArray.length), tickController.getAtomicCounter());
+        assertEquals(new Integer(markitsEventArray.length + bloombergEventArray.length + reutersEventArray.length), tickController.getAtomicCounter());
         assertFalse(tickController.getStatus());
         cachedPool.shutdown();
     }
