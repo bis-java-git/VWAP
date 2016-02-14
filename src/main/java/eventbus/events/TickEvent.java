@@ -19,10 +19,6 @@ public final class TickEvent {
         return price;
     }
 
-    public Long getTimeStamp() {
-        return timeStamp;
-    }
-
     public EventType getEventType() {
         return eventType;
     }

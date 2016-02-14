@@ -31,7 +31,6 @@ public class TickControllerImpl implements TickController {
         return atomicCounter.get();
     }
 
-
     public TickControllerImpl(final Queue<TickEvent> queue) {
         this.queue = queue;
     }
@@ -40,18 +39,15 @@ public class TickControllerImpl implements TickController {
         process();
     }
 
-
     @Override
     public void stop() {
         keepRunning.set(false);
         executor.shutdown();
-        //     executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-
     }
 
     @Override
-    public String getStatus() {
-        return "TickController running " + keepRunning.get();
+    public Boolean getStatus() {
+        return keepRunning.get();
     }
 
     private void process() throws InterruptedException {
@@ -67,8 +63,6 @@ public class TickControllerImpl implements TickController {
             }
             return null;
         };
-        //do the work
         executor.submit(task);
     }
-
 }

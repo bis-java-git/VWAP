@@ -1,7 +1,8 @@
-package eventbus;
+package controller;
 
 import controller.TickController;
 import controller.TickControllerImpl;
+import eventbus.TickEventPublisher;
 import eventbus.events.EventType;
 import eventbus.events.TickEvent;
 import eventbus.subsciber.TickSubscriber;
@@ -18,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 public class SinglePublisherAndSingleSubscriberTest {
 
@@ -104,7 +106,7 @@ public class SinglePublisherAndSingleSubscriberTest {
 
         //Then
         assertEquals(new Integer(markitsEventArray.length+bloombergEventArray.length+reutersEventArray.length), tickController.getAtomicCounter());
-
+        assertFalse(tickController.getStatus());
         cachedPool.shutdown();
     }
 }

@@ -41,8 +41,8 @@ public class VWAPServiceImpl implements VWAPService {
     }
 
     //Following assumptions made
-    // Both prices are calculated at the same time buy and sell
-    // Initial price for buy/or sale is zero, needs to be fixed later.
+    //Both prices are calculated at the same time buy and sell
+    //Initial price for buy/or sale is zero, needs to be fixed later.
     private BigDecimal getPrice(final String instrument, final EventType event) {
         BigDecimal totalVolumePrice = getALlEvents(instrument, event).
                 parallelStream().map((i) -> new BigDecimal((i.getVolume() * i.getPrice().doubleValue()))).

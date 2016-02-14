@@ -1,7 +1,6 @@
-package eventbus;
+package controller;
 
-import controller.TickController;
-import controller.TickControllerImpl;
+import eventbus.TickEventPublisher;
 import eventbus.events.EventType;
 import eventbus.events.TickEvent;
 import eventbus.subsciber.TickSubscriber;
@@ -12,15 +11,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 public class MultiplePublishersAndMultipleSubscriberTest {
 
     private final ExecutorService cachedPool = Executors.newCachedThreadPool();
-    
-    private static final String RIC="BBVA.MC";
+
+    private static final String RIC = "BBVA.MC";
 
     private final TickEvent[] ldnEventArray = {
             new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00, EventType.BUY, System.nanoTime()),
@@ -117,8 +120,8 @@ public class MultiplePublishersAndMultipleSubscriberTest {
         tickController.stop();
 
         //Then
-        assertEquals(new Integer(ldnEventArray.length+ nyEventArray.length+hkEventArray.length), tickController.getAtomicCounter());
-
+        assertEquals(new Integer(ldnEventArray.length + nyEventArray.length + hkEventArray.length), tickController.getAtomicCounter());
+        assertFalse(tickController.getStatus());
         cachedPool.shutdown();
     }
 }

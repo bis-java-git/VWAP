@@ -6,7 +6,7 @@ public interface TickController {
 
     void stop();
 
-    String getStatus();
+    Boolean getStatus();
 
     Integer getAtomicCounter();
 }

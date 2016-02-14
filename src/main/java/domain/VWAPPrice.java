@@ -34,13 +34,10 @@ public final class VWAPPrice {
         return ticker;
     }
 
-    public Long getTimeStamp() {
-        return timeStamp;
-    }
-
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder();
+        final StringBuilder builder;
+        builder = new StringBuilder();
         builder.append("VWAPPrice{").append("buyPrice=").append(buyPrice).append(", sellPrice=").append(sellPrice).append(", ticker='").append(ticker);
         builder.append(", Time= ").append(new Date(timeStamp));
         return builder.toString();
