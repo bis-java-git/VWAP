@@ -6,15 +6,13 @@ import org.slf4j.LoggerFactory;
 import service.VWAPServiceImpl;
 
 import java.util.Queue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TickControllerImpl implements TickController {
 
-    final static Logger logger = (Logger) LoggerFactory.getLogger(TickControllerImpl.class);
+    private final static Logger logger = (Logger) LoggerFactory.getLogger(TickControllerImpl.class);
 
     private final Queue<TickEvent> queue;
 
@@ -22,12 +20,12 @@ public class TickControllerImpl implements TickController {
 
     private final AtomicBoolean keepRunning = new AtomicBoolean(true);
 
-    //Assumption is that in the future it will be injected by Spring/JEE/Guice
+    //Assumption is that in the future it will be injected by Spring/JEE/Guice autowired
     private final VWAPServiceImpl vwapService = new VWAPServiceImpl();
 
-    private final ExecutorService mainExecutor = Executors.newFixedThreadPool(1);
+    private ExecutorService mainExecutor;
 
-    private final ExecutorService tickEventExecutor = Executors.newFixedThreadPool(1);
+    private ExecutorService tickEventExecutor;
 
     public Integer getTotalMarketDepthPrices() {
         return atomicCounter.get();
@@ -35,6 +33,8 @@ public class TickControllerImpl implements TickController {
 
     public TickControllerImpl(final Queue<TickEvent> queue) {
         this.queue = queue;
+        mainExecutor = Executors.newFixedThreadPool(1);
+        tickEventExecutor = Executors.newFixedThreadPool(1);
     }
 
     public void start() throws InterruptedException {
@@ -42,9 +42,11 @@ public class TickControllerImpl implements TickController {
     }
 
     @Override
-    public void stop() {
-        keepRunning.set(false);
+    public void stop() throws InterruptedException {
         mainExecutor.shutdown();
+        mainExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS);
+        keepRunning.set(false);
+        tickEventExecutor.shutdown();
     }
 
     @Override
@@ -55,7 +57,7 @@ public class TickControllerImpl implements TickController {
     //Assumption here is that we may want to do further execution of trade
     //can be easily expanded to take other processes with little modification
     //hence further thread is spawn per event
-    private void tckEventProcess(final TickEvent tickEvent) {
+    private void tickEventProcess(final TickEvent tickEvent) {
 
         Callable<Boolean> tickEventTask = () -> {
             vwapService.addTick(tickEvent);
@@ -73,7 +75,7 @@ public class TickControllerImpl implements TickController {
         Callable<Boolean> task = () -> {
             while (keepRunning.get()) {
                 if (queue.size() != 0) {
-                    tckEventProcess(queue.poll());
+                    tickEventProcess(queue.poll());
                 }
             }
             return true;

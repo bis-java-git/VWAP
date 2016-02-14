@@ -1,7 +1,6 @@
 package eventbus.events;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 public final class TickEvent {

@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 
-public class SinglePublisherAndSingleSubscriberTest {
+public class RegressionTest {
 
     private static final String RIC_BBVA = "BBVA.MC";
 
@@ -74,33 +74,35 @@ public class SinglePublisherAndSingleSubscriberTest {
     @Test
     public void shouldReceiveTickEvent() throws InterruptedException {
 
-        final ExecutorService cachedPool = Executors.newCachedThreadPool();
-        //Given
-        final Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
-        final TickController tickController = new TickControllerImpl(queue);
-        tickController.start();
+        for (int count = 0; count < 1000; count++) {
+            final ExecutorService cachedPool = Executors.newCachedThreadPool();
+            //Given
+            final Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
+            final TickController tickController = new TickControllerImpl(queue);
+            tickController.start();
 
-        final TickEventPublisher markits = new TickEventPublisher("MARKITS");
-        final TickEventPublisher bloomsberg = new TickEventPublisher("BLOOMSBERG");
-        final TickEventPublisher reuters = new TickEventPublisher("REUTERS");
-        new TickSubscriber(markits.getEventBus(), queue);
-        new TickSubscriber(bloomsberg.getEventBus(), queue);
-        new TickSubscriber(reuters.getEventBus(), queue);
+            final TickEventPublisher markits = new TickEventPublisher("MARKITS");
+            final TickEventPublisher bloomsberg = new TickEventPublisher("BLOOMSBERG");
+            final TickEventPublisher reuters = new TickEventPublisher("REUTERS");
+            new TickSubscriber(markits.getEventBus(), queue);
+            new TickSubscriber(bloomsberg.getEventBus(), queue);
+            new TickSubscriber(reuters.getEventBus(), queue);
 
-        //When
-        final List<CallableThread> tasks = new ArrayList<>();
+            //When
+            final List<CallableThread> tasks = new ArrayList<>();
 
-        tasks.add(new CallableThread(markits, Arrays.asList(markitsEventArray)));
-        tasks.add(new CallableThread(bloomsberg, Arrays.asList(bloombergEventArray)));
-        tasks.add(new CallableThread(reuters, Arrays.asList(reutersEventArray)));
+            tasks.add(new CallableThread(markits, Arrays.asList(markitsEventArray)));
+            tasks.add(new CallableThread(bloomsberg, Arrays.asList(bloombergEventArray)));
+            tasks.add(new CallableThread(reuters, Arrays.asList(reutersEventArray)));
 
-        cachedPool.invokeAll(tasks);
+            cachedPool.invokeAll(tasks);
 
-        tickController.stop();
+            tickController.stop();
 
-        //Then
-        assertEquals(new Integer(markitsEventArray.length + bloombergEventArray.length + reutersEventArray.length), tickController.getTotalMarketDepthPrices());
-        assertFalse(tickController.isRunning());
-        cachedPool.shutdown();
+            //Then
+            assertEquals(new Integer(markitsEventArray.length + bloombergEventArray.length + reutersEventArray.length), tickController.getTotalMarketDepthPrices());
+            assertFalse(tickController.isRunning());
+            cachedPool.shutdown();
+        }
     }
 }

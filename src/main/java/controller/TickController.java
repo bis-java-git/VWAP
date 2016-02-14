@@ -4,7 +4,7 @@ public interface TickController {
 
     void start() throws InterruptedException;
 
-    void stop();
+    void stop() throws InterruptedException;
 
     Boolean isRunning();
 

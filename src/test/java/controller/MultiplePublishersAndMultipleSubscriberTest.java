@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -85,9 +82,9 @@ public class MultiplePublishersAndMultipleSubscriberTest {
     }
 
     @Test
-    public void shouldReceiveEvent() throws Exception {
+    public void shouldReceiveTickEvent() throws InterruptedException {
 
-        //given
+        //Given
         Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
         // given with multiple publishers and multiple subscribers
         final TickController tickController = new TickControllerImpl(queue);
@@ -105,23 +102,20 @@ public class MultiplePublishersAndMultipleSubscriberTest {
         final TickEventPublisher reutersPublisher = new TickEventPublisher("REUTERS");
         new TickSubscriber(reutersPublisher.getEventBus(), queue);
 
-        // when
+        // When
         final List<Callable<Void>> tasks = new ArrayList<>();
 
         tasks.add(new CallableThread(markits, Arrays.asList(ldnEventArray)));
         tasks.add(new CallableThread(bloomsbergPublisher, Arrays.asList(nyEventArray)));
         tasks.add(new CallableThread(reutersPublisher, Arrays.asList(hkEventArray)));
 
-
         cachedPool.invokeAll(tasks);
-
-        //Allow 2 seconds to complete stream processing
-        Thread.sleep(2000);
 
         tickController.stop();
 
         //Then
-        assertEquals(new Integer(ldnEventArray.length + nyEventArray.length + hkEventArray.length), tickController.getTotalMarketDepthPrices());
+        assertEquals(new Integer(ldnEventArray.length + nyEventArray.length + hkEventArray.length),
+                tickController.getTotalMarketDepthPrices());
         assertFalse(tickController.isRunning());
         cachedPool.shutdown();
     }

@@ -6,6 +6,7 @@ import eventbus.events.TickEvent;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,25 +39,25 @@ public class VWAPServiceTest {
 
     @Test
     public void getVWAPPriceBuyTest() {
-        int tickCounter = 0;
-        for (TickEvent event : reutersBuyEventArray) {
+        final Integer[] tickCounter = {0};
+        Arrays.asList(reutersBuyEventArray).stream().forEach((event -> {
             vwapService.addTick(event);
             VWAPPrice price = vwapService.getVWAPPrice(event.getInstrument());
             assertEquals(RIC, price.getTicker());
-            assertEquals(EXPECTED_BUY_PRICES[tickCounter++], price.getBuyPrice().doubleValue(), DELTA);
-        }
+            assertEquals(EXPECTED_BUY_PRICES[tickCounter[0]++], price.getBuyPrice().doubleValue(), DELTA);
+        }));
     }
 
     @Test
     public void getVWAPPriceSellTest() {
-        int tickCounter = 0;
-        for (TickEvent event : reutersSellEventArray) {
+        final Integer[] tickCounter = {0};
+
+        Arrays.asList(reutersSellEventArray).stream().forEach((event -> {
             vwapService.addTick(event);
             VWAPPrice price = vwapService.getVWAPPrice(event.getInstrument());
             assertEquals(RIC, price.getTicker());
-            assertEquals(EXPECTED_SELL_PRICES[tickCounter++], price.getSellPrice().doubleValue(), DELTA);
-        }
+            assertEquals(EXPECTED_SELL_PRICES[tickCounter[0]++], price.getSellPrice().doubleValue(), DELTA);
+        }));
     }
-
 
 }
