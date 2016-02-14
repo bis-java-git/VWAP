@@ -30,7 +30,7 @@ public class SinglePublisherAndSingleSubscriberTest {
 
     private final ExecutorService cachedPool = Executors.newCachedThreadPool();
 
-    private final TickEvent[] nw24EventArray = {
+    private final TickEvent[] markitsEventArray = {
             new TickEvent(RIC_BBVA, new BigDecimal("11.1"), 100_00_00, EventType.BUY, System.nanoTime()),
             new TickEvent(RIC_BBVA, new BigDecimal("10.2"), 50_00_00, EventType.BUY, System.nanoTime()),
             new TickEvent(RIC_BBVA, new BigDecimal("9.3"), 100_00_00, EventType.BUY, System.nanoTime()),
@@ -76,29 +76,35 @@ public class SinglePublisherAndSingleSubscriberTest {
     @Test
     public void shouldReceiveEvent() throws Exception {
 
-        //given
+        //Given
         final Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
-        final TickEventPublisher nw24PublisherWithLdInstrument = new TickEventPublisher("MARKITS");
-        final TickEventPublisher nw24PublisherWithBtInstrument = new TickEventPublisher("BLOOMSBERG");
-        final TickEventPublisher nw24PublisherWithBgInstrument = new TickEventPublisher("REUTERS");
-        new TickSubscriber(nw24PublisherWithLdInstrument.getEventBus(), queue);
-        new TickSubscriber(nw24PublisherWithBtInstrument.getEventBus(), queue);
-        new TickSubscriber(nw24PublisherWithBgInstrument.getEventBus(), queue);
+        TickController tickController = new TickControllerImpl(queue);
+        tickController.start();
 
-        // when
+        final TickEventPublisher markits = new TickEventPublisher("MARKITS");
+        final TickEventPublisher bloomsberg = new TickEventPublisher("BLOOMSBERG");
+        final TickEventPublisher reuters = new TickEventPublisher("REUTERS");
+        new TickSubscriber(markits.getEventBus(), queue);
+        new TickSubscriber(bloomsberg.getEventBus(), queue);
+        new TickSubscriber(reuters.getEventBus(), queue);
+
+        //When
         final List<CallableThread> tasks = new ArrayList<>();
 
-        tasks.add(new CallableThread(nw24PublisherWithLdInstrument, Arrays.asList(nw24EventArray)));
-        tasks.add(new CallableThread(nw24PublisherWithBtInstrument, Arrays.asList(bloombergEventArray)));
-        tasks.add(new CallableThread(nw24PublisherWithBgInstrument, Arrays.asList(reutersEventArray)));
+        tasks.add(new CallableThread(markits, Arrays.asList(markitsEventArray)));
+        tasks.add(new CallableThread(bloomsberg, Arrays.asList(bloombergEventArray)));
+        tasks.add(new CallableThread(reuters, Arrays.asList(reutersEventArray)));
 
         cachedPool.invokeAll(tasks);
 
-        TickController tickController = new TickControllerImpl(queue);
-        tickController.process();
+        //Allow 2 seconds to complete stream processing
+        Thread.sleep(2000);
 
-        //then
-        assertEquals(new Integer(15), tickController.getAtomicCounter());
+        tickController.stop();
+
+        //Then
+        assertEquals(new Integer(markitsEventArray.length+bloombergEventArray.length+reutersEventArray.length), tickController.getAtomicCounter());
+
         cachedPool.shutdown();
     }
 }

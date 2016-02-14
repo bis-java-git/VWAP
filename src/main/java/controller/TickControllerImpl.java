@@ -9,7 +9,6 @@ import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,26 +36,39 @@ public class TickControllerImpl implements TickController {
         this.queue = queue;
     }
 
+    public void start() throws InterruptedException {
+        process();
+    }
+
+
     @Override
     public void stop() {
         keepRunning.set(false);
+        executor.shutdown();
+        //     executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+
     }
 
-    public void process() throws InterruptedException {
+    @Override
+    public String getStatus() {
+        return "TickController running " + keepRunning.get();
+    }
+
+    private void process() throws InterruptedException {
         Callable<Void> task = () -> {
             while (keepRunning.get()) {
-                while (queue.size() != 0) {
+                if (queue.size() != 0) {
                     final TickEvent event = queue.poll();
                     vwapService.addTick(event);
                     atomicCounter.getAndIncrement();
-                    logger.debug(vwapService.getVWAPPrice(event.getInstrument()).toString());
                     logger.debug(event.toString());
+                    logger.debug(vwapService.getVWAPPrice(event.getInstrument()).toString());
                 }
             }
             return null;
         };
+        //do the work
         executor.submit(task);
-        executor.awaitTermination(1, TimeUnit.SECONDS);
-        executor.shutdown();
     }
+
 }

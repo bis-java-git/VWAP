@@ -86,14 +86,16 @@ public class MultiplePublishersAndMultipleSubscriberTest {
         //given
         Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
         // given with multiple publishers and multiple subscribers
+        TickController tickController = new TickControllerImpl(queue);
+        tickController.start();
 
-        //NW24 Publisher
-        TickEventPublisher nw24Publisher = new TickEventPublisher("MARKITS");
-        new TickSubscriber(nw24Publisher.getEventBus(), queue);
+        //Markits Publisher
+        TickEventPublisher markits = new TickEventPublisher("MARKITS");
+        new TickSubscriber(markits.getEventBus(), queue);
 
         //Bloomeberg Publisher
-        TickEventPublisher bloombergPublisher = new TickEventPublisher("BLOOMBERG");
-        new TickSubscriber(bloombergPublisher.getEventBus(), queue);
+        TickEventPublisher bloomsbergPublisher = new TickEventPublisher("BLOOMBERG");
+        new TickSubscriber(bloomsbergPublisher.getEventBus(), queue);
 
         //Reuters Publisher
         TickEventPublisher reutersPublisher = new TickEventPublisher("REUTERS");
@@ -102,18 +104,20 @@ public class MultiplePublishersAndMultipleSubscriberTest {
         // when
         List<Callable<Void>> tasks = new ArrayList<>();
 
-        tasks.add(new CallableThread(nw24Publisher, Arrays.asList(ldnEventArray)));
-        tasks.add(new CallableThread(bloombergPublisher, Arrays.asList(nyEventArray)));
+        tasks.add(new CallableThread(markits, Arrays.asList(ldnEventArray)));
+        tasks.add(new CallableThread(bloomsbergPublisher, Arrays.asList(nyEventArray)));
         tasks.add(new CallableThread(reutersPublisher, Arrays.asList(hkEventArray)));
 
 
         cachedPool.invokeAll(tasks);
 
-        TickController tickController = new TickControllerImpl(queue);
-        tickController.process();
+        //Allow 2 seconds to complete stream processing
+        Thread.sleep(2000);
 
-        //then
-        assertEquals(new Integer(30), tickController.getAtomicCounter());
+        tickController.stop();
+
+        //Then
+        assertEquals(new Integer(ldnEventArray.length+ nyEventArray.length+hkEventArray.length), tickController.getAtomicCounter());
 
         cachedPool.shutdown();
     }

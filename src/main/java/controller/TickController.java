@@ -2,9 +2,11 @@ package controller;
 
 public interface TickController {
 
+    void start() throws InterruptedException;
+
     void stop();
 
-    void process() throws InterruptedException;
+    String getStatus();
 
     Integer getAtomicCounter();
 }
