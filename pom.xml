@@ -12,7 +12,7 @@
 
 
     <groupId>ebus.softwarehouse.co</groupId>
-    <artifactId>ebus-test</artifactId>
+    <artifactId>bbva-test</artifactId>
     <version>1.0</version>
     <dependencies>
         <dependency>

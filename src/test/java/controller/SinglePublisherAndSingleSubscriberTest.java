@@ -33,13 +33,13 @@ public class SinglePublisherAndSingleSubscriberTest {
     private final TickEvent[] markitsEventArray = {
             new TickEvent(RIC_BBVA, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
             new TickEvent(RIC_BBVA, new BigDecimal("10.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("9.3"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("8.1"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("7.2"), 50_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("15.3"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("20.1"), 0L, EventType.NONE, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("5.2"), 0L, EventType.NONE, System.nanoTime()),
-            new TickEvent(RIC_BBVA, new BigDecimal("30.3"), 0L, EventType.NONE, System.nanoTime())
+            new TickEvent(RIC_BBVA, new BigDecimal("12.3345"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("11.785"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("10.987"), 50_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("12.32"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("11.789"), 0L, EventType.NONE, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("12.678"), 0L, EventType.NONE, System.nanoTime()),
+            new TickEvent(RIC_BBVA, new BigDecimal("11.98"), 0L, EventType.NONE, System.nanoTime())
     };
 
 

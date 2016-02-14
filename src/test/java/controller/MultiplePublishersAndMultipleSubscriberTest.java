@@ -26,43 +26,43 @@ public class MultiplePublishersAndMultipleSubscriberTest {
     private static final String RIC = "BBVA.MC";
 
     private final TickEvent[] ldnEventArray = {
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.BUY, System.nanoTime())
+            new TickEvent(RIC, new BigDecimal("11.1234"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.2345"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.3456"), 100_00_00L, EventType.BUY, System.nanoTime())
     };
 
 
     private final TickEvent[] nyEventArray = {
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.SELL, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.SELL, System.nanoTime())
+            new TickEvent(RIC, new BigDecimal("11.1234"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.2345"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.3456"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.1234"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.2345"), 50_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.3456"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("12.1234"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("12.2345"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("12.3456"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("12.0897"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.2345"), 50_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.3456"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.1234"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("12.2345"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.3456"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("13.1344"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("12.2456"), 50_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.3345"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.1234"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.2456"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.3234"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.1234"), 100_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("12.22222"), 50_00_00L, EventType.SELL, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.33333"), 100_00_00L, EventType.SELL, System.nanoTime())
     };
 
     private final TickEvent[] hkEventArray = {
-            new TickEvent(RIC, new BigDecimal("11.1"), 100_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.2"), 50_00_00L, EventType.BUY, System.nanoTime()),
-            new TickEvent(RIC, new BigDecimal("11.3"), 100_00_00L, EventType.BUY, System.nanoTime())
+            new TickEvent(RIC, new BigDecimal("11.123456"), 100_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.234567"), 50_00_00L, EventType.BUY, System.nanoTime()),
+            new TickEvent(RIC, new BigDecimal("11.345678"), 100_00_00L, EventType.BUY, System.nanoTime())
     };
 
     private class CallableThread implements Callable<Void> {

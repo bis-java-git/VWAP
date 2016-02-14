@@ -25,7 +25,9 @@ public class TickControllerImpl implements TickController {
     //Assumption is that in the future it will be injected by Spring/JEE/Guice
     private final VWAPServiceImpl vwapService = new VWAPServiceImpl();
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private final ExecutorService mainExecutor = Executors.newFixedThreadPool(1);
+
+    private final ExecutorService tickEventExecutor = Executors.newFixedThreadPool(1);
 
     public Integer getTotalMarketDepthPrices() {
         return atomicCounter.get();
@@ -42,7 +44,7 @@ public class TickControllerImpl implements TickController {
     @Override
     public void stop() {
         keepRunning.set(false);
-        executor.shutdown();
+        mainExecutor.shutdown();
     }
 
     @Override
@@ -50,19 +52,29 @@ public class TickControllerImpl implements TickController {
         return keepRunning.get();
     }
 
+
+    private void tckEventProcess(final TickEvent tickEvent) {
+
+        Callable<Boolean> tickEventTask = () -> {
+            vwapService.addTick(tickEvent);
+            atomicCounter.getAndIncrement();
+            logger.info(tickEvent.toString());
+            logger.info(String.valueOf(vwapService.getVWAPPrice(tickEvent.getInstrument())));
+            return true;
+        };
+        tickEventExecutor.submit(tickEventTask);
+    }
+
     private void process() throws InterruptedException {
-        Callable<Void> task = () -> {
+
+        Callable<Boolean> task = () -> {
             while (keepRunning.get()) {
                 if (queue.size() != 0) {
-                    final TickEvent event = queue.poll();
-                    vwapService.addTick(event);
-                    atomicCounter.getAndIncrement();
-                    logger.info(event.toString());
-                    logger.info(vwapService.getVWAPPrice(event.getInstrument()).toString());
+                    tckEventProcess(queue.poll());
                 }
             }
-            return null;
+            return true;
         };
-        executor.submit(task);
+        mainExecutor.submit(task);
     }
 }

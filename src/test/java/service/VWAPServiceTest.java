@@ -15,7 +15,7 @@ public class VWAPServiceTest {
 
     private static String RIC = "bbva.mc";
 
-    private static Long VOLUME  = 100_0L;
+    private static Long VOLUME = 100_0L;
 
     private VWAPService vwapService = new VWAPServiceImpl();
 
@@ -38,23 +38,23 @@ public class VWAPServiceTest {
 
     @Test
     public void getVWAPPriceBuyTest() {
-        int i = 0;
+        int tickCounter = 0;
         for (TickEvent event : reutersBuyEventArray) {
             vwapService.addTick(event);
             VWAPPrice price = vwapService.getVWAPPrice(event.getInstrument());
             assertEquals(RIC, price.getTicker());
-            assertEquals(EXPECTED_BUY_PRICES[i++], price.getBuyPrice().doubleValue(), DELTA);
+            assertEquals(EXPECTED_BUY_PRICES[tickCounter++], price.getBuyPrice().doubleValue(), DELTA);
         }
     }
 
     @Test
     public void getVWAPPriceSellTest() {
-        int i = 0;
+        int tickCounter = 0;
         for (TickEvent event : reutersSellEventArray) {
             vwapService.addTick(event);
             VWAPPrice price = vwapService.getVWAPPrice(event.getInstrument());
             assertEquals(RIC, price.getTicker());
-            assertEquals(EXPECTED_SELL_PRICES[i++], price.getSellPrice().doubleValue(), DELTA);
+            assertEquals(EXPECTED_SELL_PRICES[tickCounter++], price.getSellPrice().doubleValue(), DELTA);
         }
     }
 
