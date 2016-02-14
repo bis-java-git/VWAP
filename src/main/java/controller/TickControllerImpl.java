@@ -52,7 +52,9 @@ public class TickControllerImpl implements TickController {
         return keepRunning.get();
     }
 
-
+    //Assumption here is that we may want to do further execution of trade
+    //can be easily expanded to take other processes with little modification
+    //hence further thread is spawn per event
     private void tckEventProcess(final TickEvent tickEvent) {
 
         Callable<Boolean> tickEventTask = () -> {
@@ -65,6 +67,7 @@ public class TickControllerImpl implements TickController {
         tickEventExecutor.submit(tickEventTask);
     }
 
+    //Keep streaming
     private void process() throws InterruptedException {
 
         Callable<Boolean> task = () -> {
