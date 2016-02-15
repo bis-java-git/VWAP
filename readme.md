@@ -8,7 +8,7 @@ Maven installed on the machine
 <p>
 Just clone the repository  https://github.com/bis-java-git/VWAP.git
 
-and run the maven command as follows
+and run the maven command as follows, assuming apache maven is installed.
 </p>
 <h1>mvn clean install</h1>
 
