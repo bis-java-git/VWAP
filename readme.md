@@ -19,7 +19,7 @@ this is done to test concurrency and volume of data.
 </p>
 
 <p>
-If maven is an issue or unable to build package and run tests then follow steps below for ruuning of application.
+If maven is an issue or unable to build package and run tests then follow steps below for running of application.
 </p>
 <p>Please download jar/vwap-full.jar file.
 by clicking and then pressing Raw button.</p>
