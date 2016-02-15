@@ -21,11 +21,12 @@ this is done to test concurrency and volume of data.
 <p>
 If maven is an issue or unable to build package and run tests then follow steps below for running of application.
 </p>
-<p>Please download jar/vwap-full.jar file.
+<p>Please download jar/vwap-full.jar file from the GIT repository.
 by clicking and then pressing Raw button.</p>
-<p>Finally run VWAPMainTestExample</p>
+<p>Finally run following command</p>
 <h1>java -jar vwap-full.jar.</h1>
 
-
- 
+<p>
+<h1>Please note Java 8 is required and must be installed on the machine.</h1>
+ </p>
 Enjoy
