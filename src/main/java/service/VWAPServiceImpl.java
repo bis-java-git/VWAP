@@ -6,12 +6,12 @@ import eventbus.events.TickEvent;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -20,17 +20,10 @@ public class VWAPServiceImpl implements VWAPService {
 
     private static final int DECIMAL_PLACES = 6;
 
-    private final ReentrantReadWriteLock vwapLock = new ReentrantReadWriteLock();
-
-    private final ReentrantReadWriteLock.ReadLock vwapReadLock = vwapLock.readLock();
-
-    private final ReentrantReadWriteLock.WriteLock vwapWriteLock = vwapLock.writeLock();
-
     //Assumptions made that all the prices in the map
-    //Map needs to be cleared or pricing routine needs to check for time between say 16.00 and 17.00
-    //not taken in account
+    //Map needs to be cleared at some time
     //price expiry period needs to be set, which will be enhancement later.
-    private final ConcurrentMap<String, List<TickEvent>> marketDepthMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Queue<TickEvent>> marketDepthMap = new ConcurrentHashMap<>();
 
     private List<TickEvent> getALlEvents(final String instrument,
                                          final EventType eventType) {
@@ -70,23 +63,19 @@ public class VWAPServiceImpl implements VWAPService {
 
     @Override
     public VWAPPrice getVWAPPrice(final String instrument) {
-        vwapReadLock.lock();
         final BigDecimal buyVolumePrice = getPrice(instrument, EventType.BUY);
         final BigDecimal sellVolumePrice = getPrice(instrument, EventType.SELL);
         final VWAPPrice price = new VWAPPrice(buyVolumePrice, sellVolumePrice, instrument);
-        vwapReadLock.unlock();
         return price;
     }
 
     @Override
     public void addTick(final TickEvent event) {
-        vwapWriteLock.lock();
-        List<TickEvent> list = marketDepthMap.get(event.getInstrument());
+        Queue<TickEvent> list = marketDepthMap.get(event.getInstrument());
         if (list == null) {
-            list = new LinkedList<>();
+            list = new ConcurrentLinkedQueue<>();
             marketDepthMap.put(event.getInstrument(), list);
         }
         list.add(event);
-        vwapWriteLock.unlock();
     }
 }

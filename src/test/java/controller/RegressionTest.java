@@ -74,7 +74,7 @@ public class RegressionTest {
     @Test
     public void shouldReceiveTickEvent() throws InterruptedException {
 
-        for (int count = 0; count < 1000; count++) {
+        for (int count = 0; count < 100; count++) {
             final ExecutorService cachedPool = Executors.newCachedThreadPool();
             //Given
             final Queue<TickEvent> queue = new ConcurrentLinkedQueue<>();
