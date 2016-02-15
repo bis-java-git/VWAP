@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da806f88-6763-486a-8263-343f6c190a60" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/jar/vwap-full.jar" afterPath="$PROJECT_DIR$/jar/vwap-full.zip" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/jar/vwap-full.zip" afterPath="$PROJECT_DIR$/jar/vwap-full.jar" />
     </list>
     <ignored path="bbva.iws" />
     <ignored path=".idea/workspace.xml" />
