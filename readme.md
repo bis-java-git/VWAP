@@ -26,9 +26,9 @@ If maven is an issue or unable to build package and run tests then follow steps 
 <p>Please download jar/vwap-full.jar file from the GIT repository.
 by clicking and then pressing Raw button.</p>
 <p>Finally run following command</p>
-<h1>java -jar vwap-full.jar.</h1>
+<p>java -jar vwap-full.jar.</p1>
 
 <p>
 <h1>Please note Java 8 is required and must be installed on the machine.</h1>
- </p>
+</p>
 Enjoy
