@@ -15,9 +15,10 @@ this is done to test concurrency and volume of data.
 
 If maven is or unable to run using maven.
 
-<h1><p>Please download jar/vwap-full.jar file.
-https://github.com/bis-java-git/VWAP/blob/master/jar/vwap-full.jar
-java -jar vwap-full.jar.</p></h1>
+<p>Please download jar/vwap-full.jar file.
+by clicking and then pressing Raw button.</p>
+<p>Finally run VWAPMainTestExample</p>
+<h1>java -jar vwap-full.jar.</h1>
 
 
  
