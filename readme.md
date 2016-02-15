@@ -7,7 +7,6 @@ Maven installed on the machine
  </p>
 <p>
 Just clone the repository  https://github.com/bis-java-git/VWAP.git
-
 and run the maven command as follows, assuming apache maven is installed.
 </p>
 <h1>mvn clean install</h1>
@@ -31,4 +30,11 @@ by clicking and then pressing Raw button.</p>
 <p>
 <h1>Please note Java 8 is required and must be installed on the machine.</h1>
 </p>
-Enjoy
+
+<h1>Ruuning Unit Tests without maven<h1>
+<p>If you want to run all the unit tests without maven, please download all the files in the jar folder onto your local machine
+ and run "run.bat"
+</p>
+ 
+ 
+ Enjoy
