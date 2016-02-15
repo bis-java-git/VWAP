@@ -65,8 +65,7 @@ public class VWAPServiceImpl implements VWAPService {
     public VWAPPrice getVWAPPrice(final String instrument) {
         final BigDecimal buyVolumePrice = getPrice(instrument, EventType.BUY);
         final BigDecimal sellVolumePrice = getPrice(instrument, EventType.SELL);
-        final VWAPPrice price = new VWAPPrice(buyVolumePrice, sellVolumePrice, instrument);
-        return price;
+        return new VWAPPrice(buyVolumePrice, sellVolumePrice, instrument);
     }
 
     @Override
