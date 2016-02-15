@@ -12,5 +12,12 @@ Just clone the repository and run the maven command https://github.com/bis-java-
 Please note running of RegressionTest have been exculded in the pom.xml, 
 only appropriate for regression testing on performance server,
 this is done to test concurrency and volume of data.
+
+If maven is or unable to run using maven.
+
+<h1><p>Please download jar/vwap-full.jar file.
+java -jar vwap-full.jar.</p></h1>
+
+
  
 Enjoy

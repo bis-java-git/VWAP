@@ -18,7 +18,7 @@
 
 
     <groupId>ebus.softwarehouse.co</groupId>
-    <artifactId>bbva-test</artifactId>
+    <artifactId>bbva-vwap-light</artifactId>
     <version>1.0</version>
     <dependencies>
         <dependency>
@@ -74,6 +74,35 @@
                         <include>RegressionTest.java</include>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>runner.VWAPMainTestExample</mainClass>
+                                </transformer>
+                            </transformers>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>commons-logging:commons-logging</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <finalName>vwap-full</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
